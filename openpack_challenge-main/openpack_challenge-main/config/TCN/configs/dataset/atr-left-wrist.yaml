@@ -1,0 +1,6 @@
+defaults:
+  - annotation: activity-1s
+  - stream: atr-acc-left-wrist
+  - split: openpack-challenge-2022
+  - classes: OPENPACK_OPERATIONS
+name: "atr-left-wrist"
