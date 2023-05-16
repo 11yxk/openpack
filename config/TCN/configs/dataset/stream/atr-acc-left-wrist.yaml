@@ -1,0 +1,10 @@
+defaults:
+  - atr-qags
+  - _self_
+name: atr-acc-left-wrist
+super_stream: atr-qags
+devices:
+  - atr02
+acc: true
+gyro: false
+quat: false

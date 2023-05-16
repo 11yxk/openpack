@@ -1,0 +1,57 @@
+defaults:
+  - dataset: openpack-2d-kpt
+  - override hydra/job_logging: custom
+  - _self_
+datarootdir: /path/to/your/openpack_dataset/v0.3.1
+issue: "joint"
+#issue: "bone"
+hydra:
+  run:
+    dir: ${path.logdir.rootdir}
+  job:
+    chdir: true
+debug: true
+mode: "test"
+model:
+  name: "CTRGCN4Seg"
+  Ks: 3
+  Kt: 9
+device: [0]
+bone: False
+alpha: 1
+train:
+  num_workers: 3
+  batch_size: 8
+  epochs: 100
+  window: 900 # 15 * 60s
+  optimizer:
+    type: "Adam"
+    lr: 0.01
+    weight_decay: 0.0001
+    step: [50,75]
+  debug:
+    batch_size: 8
+    epochs: 5
+path:
+  openpack:
+    version: v0.3.1
+    rootdir: /path/to/your/openpack_dataset/v0.3.1
+  logdir:
+    rootdir: ${datarootdir}/log/${dataset.name}/${model.name}/${issue}
+    model: ${path.logdir.rootdir}/model.pth
+    predict: ${path.logdir.rootdir}/pred/{user}-{session}
+    summary:
+      test: ${path.logdir.rootdir}/summary.csv
+      submission: ${path.logdir.rootdir}/summary_submission.csv
+
+
+# Train
+# python main.py mode=train debug=false
+
+# Test
+# python main.py mode=test debug=false
+
+# Make submission zip file
+# python main.py mode=submission debug=false
+
+

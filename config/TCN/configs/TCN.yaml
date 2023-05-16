@@ -1,0 +1,58 @@
+defaults:
+  - dataset: atr-left-wrist
+  - override hydra/job_logging: custom
+  - _self_
+datarootdir: "/path/to/your/openpack_dataset/v0.3.1"
+issue: "acc"
+#issue: "gyro"
+hydra:
+  run:
+    dir: ${path.logdir.rootdir}
+  job:
+    chdir: true
+debug: true
+mode: "test"
+model:
+  name: DeepConvLSTM
+device: [0]
+train:
+  num_workers: 3
+  batch_size: 32
+  epochs: 100
+  window: 1800 # 30Hz * 60s
+  optimizer:
+    type: "Adam"
+    lr: 0.01
+    weight_decay: 0.0001
+    step: [50,75]
+  debug:
+    batch_size: 8
+    epochs: 5
+alpha: 1
+beta: 1
+use_acc: True
+use_gyro: False
+path:
+  openpack:
+    version: v0.3.1
+    rootdir: /path/to/your/openpack_dataset/v0.3.1
+  logdir:
+    rootdir: ${datarootdir}/log/${dataset.name}/${model.name}/${issue}
+    model: ${path.logdir.rootdir}/model.pth
+    predict: ${path.logdir.rootdir}/pred/{user}-{session}
+    summary:
+      test: ${path.logdir.rootdir}/summary.csv
+      submission: ${path.logdir.rootdir}/summary_submission.csv
+
+
+
+
+# Train
+# python main_acc_boundary.py mode=train debug=false
+
+# Test
+# python main_acc_boundary.py mode=test debug=false
+
+# Make submission zip file
+# python main_acc_boundary.py mode=submission debug=false
+
